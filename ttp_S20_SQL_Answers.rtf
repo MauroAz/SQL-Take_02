@@ -1,18 +1,33 @@
 {\rtf1\ansi\ansicpg1252\cocoartf1561\cocoasubrtf600
 {\fonttbl\f0\fswiss\fcharset0 Helvetica;}
-{\colortbl;\red255\green255\blue255;\red255\green255\blue10;}
-{\*\expandedcolortbl;;\cssrgb\c99942\c98555\c0;}
-\margl1440\margr1440\vieww15320\viewh14160\viewkind0
+{\colortbl;\red255\green255\blue255;\red255\green255\blue10;\red179\green179\blue179;}
+{\*\expandedcolortbl;;\cssrgb\c99942\c98555\c0;\csgray\c75407;}
+\margl1440\margr1440\vieww15320\viewh15600\viewkind0
 \pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
 
 \f0\fs24 \cf0 -- Another clever use of SUBQUERIES\
 \
 \cb2 -- EXAMPLE: What is the average customer lifetime spending?\cb1 \
 \
+\'97>WRONG\
+SELECT AVG(amount)\
+FROM payment\
+GROUP BY customer_id;\
+\
+\'97>WRONG\
 SELECT AVG(SUM(amount))\
 FROM payment\
-GROUP BY customer_id; --NOPE! "ERROR:  aggregate function calls cannot be nested"\
+GROUP BY customer_id; 		--NOPE! "ERROR:  aggregate function calls cannot be nested"\
 \
+\'97> CORRECT \
+		SELECT AVG(total)\
+		FROM (SELECT SUM(amount) as total \
+	  	FROM payment \
+	  	GROUP BY customer_id) as customer_totals\
+\
+	\cb3 -- Important! Notice the alias at the END. This is necessary when the sub-query \
+	is in the from clause\'85\'94\
+\cb1 \
 \
 \cb2 \'97> I added this QUESTION myself\cb1 \
 SELECT c.customer_id, first_name ||' '|| last_name AS name, \
@@ -22,15 +37,7 @@ JOIN payment AS p\
 ON c.customer_id = p.customer_id\
 \
 \
---TRY THIS\
-SELECT AVG(total)\
-FROM (SELECT SUM(amount) as total \
-	  FROM payment \
-	  GROUP BY customer_id) as customer_totals; --NICE! \
--- IMPORTANT! NOTICE THE ALIAS AT THE END. THIS IS NECESSARY WHEN THE SUBQUERY\
--- IS IN THE FROM CLAUSE\
-\
---OR do the above with a CTE:\
+\cb2 --OR do the above with a CTE:\cb1 \
 WITH customer_totals as ( --start of CTE\
 SELECT SUM(amount) as total \
 FROM payment \
@@ -38,12 +45,24 @@ GROUP BY customer_id) --end of CTE\
 SELECT AVG(total)\
 FROM customer_totals;\
 \
--- YOUR TURN: what is the average of the amount of stock each store has in their inventory? (Use inventory table)\
+\cb2 -- YOUR TURN: what is the average of the amount of stock each store has in their inventory? (Use inventory tabl\cb1 e)\
+		SELECT AVG(stock)\
+			FROM (SELECT SUM(film_id) as stock \
+	  		FROM inventory  \
+	  		GROUP BY store_id) as store_amount\
 \
--- YOUR TURN: What is the average customer lifetime spending, for each staff member?\
+\
+\cb2 -- YOUR TURN: What is the average customer lifetime spending, for each staff member?\cb1 \
 -- HINT: you can work off the example\
 \
 \
 \
 --YOUR TURN: \
---What is the average number of films we have per genre (category)?}
+\cb2 --What is the average number of films we have per genre (category)?\cb1 \
+llblknlkn\
+\
+\
+\
+\
+\
+}
