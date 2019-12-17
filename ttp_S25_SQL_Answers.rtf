@@ -1,8 +1,8 @@
 {\rtf1\ansi\ansicpg1252\cocoartf1561\cocoasubrtf600
 {\fonttbl\f0\fswiss\fcharset0 Helvetica;}
-{\colortbl;\red255\green255\blue255;}
-{\*\expandedcolortbl;;}
-\margl1440\margr1440\vieww10800\viewh8400\viewkind0
+{\colortbl;\red255\green255\blue255;\red255\green255\blue10;\red134\green205\blue77;}
+{\*\expandedcolortbl;;\cssrgb\c99942\c98555\c0;\cssrgb\c58755\c82661\c37297;}
+\margl1440\margr1440\vieww13920\viewh17180\viewkind0
 \pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
 
 \f0\fs24 \cf0 -- WHERE Clause exercises: every query builds on the previous\
@@ -10,39 +10,81 @@
 -- grab all data from the film table\
 SELECT * FROM film\
 \
--- English films only : return all films that have a language ID of 1\
+\cb2 	-- English films only : return all films that have a language ID of 1\cb1 \
 SELECT language_id FROM film\
--- (note: we already know this happens to be all the films in the database\
--- but let's make sure we know how to do this IF there was multiple languages)\
-SELECT   FROM film\
+	-- (note: we already know this happens to be all the films in the database\
+	-- but let's make sure we know how to do this IF there was multiple languages)\
+SELECT *\
+FROM film\
 where language_id = 1;\
 \
--- English films for todlers\
--- return all films with language ID of 1 and is rated G\
+\cb2 	-- English films for toddlers\
+	-- return all films with language ID of 1 and is rated G\cb1 \
 SELECT f.film_id, f.title AS "Toddler flicks"\
 FROM film AS f\
-WHERE f.language_id = 1 AND f.rating = "G"\
+WHERE f.language_id = 1 AND f.rating = \'91G\'92\
+\
+\
+>>>>>>>>>>>>>>>>>>>>>. \cb3 Updated: 12/12/2019\cb1 	  \
+	-- Family friendly English films\
+\cb2 	-- return all films with language ID of 1 and is rated G, PG, or PG-13\cb1 \
+SELECT *\
+FROM film AS f\
+where language_id = 1 AND f.rating = 'G'\
+OR f.rating = 'PG' OR f.rating = 'PG-13'\
+\
+\cb2 	\'97> (let\'92s call these \'93Tween Flicks\'94 and ORDER them by YEAR\cb1 \
+SELECT f.film_id, f.title, rating, release_year AS "Tween Flicks"\
+FROM film AS f\
+where language_id = 1 AND f.rating = 'G'\
+OR f.rating = 'PG' OR f.rating = 'PG-13'\
+ORDER BY release_year;\
 \
 \
 \
-(((I only answered 3... :-/ \
-\
+	-- Family friendly English films on a budget:\
+\cb2 	-- return all films with language ID of 1 and is rated G, PG, or PG-13,\cb1 \
+	-- and have a rental rate less than $3 and a replacement cost less than $10\
+SELECT f.title, rating, release_year, rental_rate, replacement_cost AS "Family Budget"\
+FROM film AS f\
+where language_id = 1 AND f.rating = 'G'\
+OR f.rating = 'PG' OR f.rating = 'PG-13'\
+AND rental_rate > 3 AND replacement_cost > 10\
+ORDER BY rental_rate DESC;\
 \
 	  \
--- Family friendly English films\
--- return all films with language ID of 1 and is rated G, PG, or PG-13\
-\
-\
--- Family friendly English films on a budget:\
--- return all films with language ID of 1 and is rated G, PG, or PG-13,\
--- and have a rental rate less than $3 and a replacement cost less than $10\
-\
-	  \
--- Nostalgiac family friendly English films on a budget with a short attention span!:\
--- return all films with language ID of 1 and is rated G, PG, or PG-13,\
--- and have a rental rate less than $3 and a replacement cost less than $10,\
--- and last less than an hour and a half long, from the year 2006 or earlier\
+	-- Nostalgic family friendly English films on a budget with a short attention span!:\
+	-- return all films with language ID of 1 and is rated G, PG, or PG-13,\
+	-- and have a rental rate less than $3 and a replacement cost less than $10,\
+\cb2 	-- and last less than an hour and a half long, from the year 2006 or earlier\cb1 \
+SELECT f.title, rating, release_year, rental_rate, replacement_cost, length AS "ADD People"\
+FROM film AS f\
+where language_id = 1 AND f.rating = 'G'\
+OR f.rating = 'PG' OR f.rating = 'PG-13'\
+AND rental_rate > 3 AND replacement_cost > 10\
+AND length > 90 AND release_year > 2006\
+ORDER BY rental_rate DESC;\
 \
 	  \
--- BONUS\
--- Of the films from the previous query, which ones talk about a 'Moose' in the description?}
+\cb2 	-- BONUS\cb1 \
+	\cb2 -- Of the films from the previous query, which ones talk about a 'Moose' in the description?\
+\cb1 SELECT f.title, description, rating, release_year, rental_rate, replacement_cost AS "Moose Films"\
+FROM film AS f\
+where language_id = 1 AND f.rating = 'G'\
+OR f.rating = 'PG' OR f.rating = 'PG-13'\
+AND rental_rate > 3 AND replacement_cost > 10\
+AND length > 90 AND release_year > 2006\
+AND description = 'Moose'\
+ORDER BY rental_rate DESC;\
+\
+\cb2 	\'97Only movies with \'93Moose\'94 in description\cb1 \
+SELECT * FROM film\
+where description ILIKE '%Moose%';\
+\
+\cb2 \ul REMEMBER:\cb1 \ulnone \
+LIKE ==> is case sensitive\
+ILIKE ==> is NOT case sensitive\
+\
+\
+\
+}
