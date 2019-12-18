@@ -1,30 +1,111 @@
 {\rtf1\ansi\ansicpg1252\cocoartf1561\cocoasubrtf600
 {\fonttbl\f0\fswiss\fcharset0 Helvetica;}
-{\colortbl;\red255\green255\blue255;}
-{\*\expandedcolortbl;;}
-\margl1440\margr1440\vieww13920\viewh15720\viewkind0
+{\colortbl;\red255\green255\blue255;\red255\green255\blue10;\red255\green255\blue10;}
+{\*\expandedcolortbl;;\cssrgb\c99942\c98555\c0;\cssrgb\c99942\c98555\c0;}
+\margl1440\margr1440\vieww16640\viewh13620\viewkind0
 \pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
 
 \f0\fs24 \cf0 \
                   -- EXERCISES - each one has an 'a' and a 'b' part. The 'a' part is the subquery for the 'b' part.\
--- 1a) What is the average length of all the films?\
+\cb2 	-- 1a) What is the average length of all the films?\cb1 \
+Select AVG(length)\
+FROM\
+Film\
+\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \cb3 	\'97 1a) What is the average length of all the films? ROUNDED the number in this version\cb1 \
+SELECT ROUND(AVG(length)) \
+FROM film\
 \
 \
 \
--- 1b) Return all films with shorter than average length.\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \cb2 	-- 1b) Return all films with shorter than average length.\cb1 \
+SELECT title, length\
+FROM\
+Film\
+WHERE length < (SELECT AVG(length) FROM film)\
 \
 \
--- 2a) What is the smallest rental rate	in the database?\
--- 2b) Return all films with the lowest rental rate (using a WHERE claus)\
+\cb2 	-- 2a) What is the smallest rental rate	in the database?\cb1 \
+The smallest \'93rental_rate\'94 is 0.99\
+SELECT title, rental_rate\
+FROM\
+Film\
+ORDER BY rental_rate ASC\
 \
 \
--- 3a) What is the average payment amount in the database?\
--- 3b) Return all payments with below average payment amounts\
+\cb2 	-- 2b) Return all films with the lowest rental rate (using a WHERE clause)\cb1 \
+SELECT title, rental_rate\
+FROM\
+Film\
+WHERE rental_rate = '0.99'\
 \
 \
--- 4a) What is the customer ID who made the earliest payment?		  \
--- 4b) Return all purchases from the longest standing customer				\
 \
--- 5a) What rating ('PG', 'G', etc) has the least films?\
+\cb2 	-- 3a) What is the average payment amount in the database?\cb1 \
+SELECT ROUND(AVG(amount))\
+FROM\
+payment\
+\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \cb3 	-- 3a) What is the average payment amount in the database?\cb1 \
+SELECT ROUND(AVG(amount), 2)\
+FROM\
+payment\
+\
+ANSWER: Average amount is $4.20 :-) \
+\
+\
+\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \cb2 	-- 3b) Return all payments with below average payment amounts\cb1 \
+SELECT amount\
+FROM\
+payment\
+WHERE amount < (SELECT AVG(amount) FROM payment)\
+\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \cb3 	-- 3b) Return all payments with below average payment amounts\cb1 \
+SELECT rental_id, amount\
+FROM\
+payment\
+WHERE amount < (SELECT AVG(amount) FROM payment)\
+ORDER BY amount DESC;\
+\
+\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \cb2 	-- 4a) What is the customer ID who made the earliest payment?\cb1 		  \
+ANSWER: customer_id 416\
+\
+SELECT c.customer_id, payment_date\
+FROM\
+customer AS c\
+JOIN\
+Payment AS p\
+ON c.customer_id = p.customer_id\
+ORDER BY payment_date ASC;\
+\
+\
+\cb2 	-- 4b) Return all purchases from the longest standing customer\cb1 \
+\
+ATTEMPTED but it\'92s WRONG (Ran out of time, will continue tomorrow\'85)\
+\
+SELECT customer_id, create_date\
+FROM\
+customer\
+ORDER BY create_date ASC;\
+\
+				\
+\
+\cb2 	-- 5a) What rating ('PG', 'G', etc) has the least films?\cb1 \
+\
+\
+\
 -- 5b) Return all films that have the rating that is biggest category \
--- (ie. rating with the highest count of films)}
+-- (ie. rating with the highest count of films)\
+\
+\
+\
+\
+}
